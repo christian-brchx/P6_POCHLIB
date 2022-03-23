@@ -12,23 +12,68 @@ async function showContent() {
 }
 
 function createAddBookButton(){
+    // clean search blok if exists
+    let searchBlok = document.getElementById("search-blok");
+    if (searchBlok != null) {
+      searchBlok.remove();
+    }
     let element = document.createElement("button");
     element.innerText = "Ajouter un livre";
-    element.addEventListener("click",onClickAddBookButton);
+    element.classList.add("button-green");
+    element.id = "add-button";
     h2NewBook.insertAdjacentElement("afterEnd",element);
-}
-
-function onClickAddBookButton(e) {
-    e.preventDefault;
-    console.log("clic Button");
-    searchForBook();
+    element.addEventListener("click",function onClickAddBookButton(e) {
+      e.preventDefault;
+      console.log("clic Button");
+      searchForBook();
+    });
 }
 
 function searchForBook(){
     console.log("Search for Book");
-    ret = searchForBooksWithGoogleApi("Les voies", "Powers");
-    console.log("Search for Book ret = ", ret);
+    createSearchButtonsAndFields();
 }
+
+function createSearchButtonsAndFields() {
+  // Clean the add Button
+  document.getElementById("add-button").remove();
+  console.log("create searchbuttons and fields");
+  let searchBlok = document.createElement("div");
+  searchBlok.id = "search-blok";
+  h2NewBook.insertAdjacentElement("afterEnd",searchBlok);
+  searchBlok.appendChild(document.createElement("p")).textContent = "Titre du livre";
+  let titleBook = document.createElement("input");
+  titleBook.innerHTML = "<p>Titre du livre</p>";
+  titleBook.maxLength = 100;
+  titleBook.required = true;
+  searchBlok.appendChild(titleBook);
+  searchBlok.appendChild(document.createElement("p")).textContent = "Auteur";
+  let authorBook = document.createElement("input");
+  authorBook.maxLength = 100;
+  authorBook.required = true;
+  searchBlok.appendChild(authorBook);
+  
+  
+  let searchButton = document.createElement("button");
+  searchButton.classList.add("button-green");
+  searchButton.innerText = "Rechercher";
+  searchBlok.appendChild(searchButton);
+  let cancelButton = document.createElement("button");
+  cancelButton.classList.add("button-red");
+  cancelButton.innerText = "Annuler";
+  searchBlok.appendChild(cancelButton);
+  searchButton.addEventListener("click",function onClickSearchBookButton(e) {
+    e.preventDefault;
+    console.log("clic SearchButton");
+    searchForBooksWithGoogleApi("Les voies", "Powers");
+  });
+  cancelButton.addEventListener("click",function onClickCancelButton(e) {
+    e.preventDefault;
+    console.log("clic CancelButton");
+    createAddBookButton();
+  });
+}
+
 
 async function searchForBooksWithGoogleApi(intitle, inauthor) {
   let request = GOOGLE_BOOKS_API + "?q=" + intitle + "+inauthor:" + inauthor;
@@ -75,7 +120,7 @@ function addFoundBookInContent(book){
   let elementBookDescription = document.createElement("div");
   elementBookDescription.classList.add("Description");
   if (book.volumeInfo.description != "") {
-    elementBookDescription.innerText = book.volumeInfo.description;
+    elementBookDescription.innerText = book.volumeInfo.description.substring(0,200);
   } else {
     elementBookDescription.innerText = "Information manquante";
   }
