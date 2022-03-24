@@ -12,68 +12,64 @@ async function showContent() {
 }
 
 function createAddBookButton(){
-    // clean search blok if exists
-    let searchBlok = document.getElementById("search-blok");
-    if (searchBlok != null) {
-      searchBlok.remove();
-    }
-    let element = document.createElement("button");
-    element.innerText = "Ajouter un livre";
-    element.classList.add("button-green");
-    element.id = "add-button";
-    h2NewBook.insertAdjacentElement("afterEnd",element);
-    element.addEventListener("click",function onClickAddBookButton(e) {
-      e.preventDefault;
-      console.log("clic Button");
-      searchForBook();
-    });
+    return(createButton(addButtonId,"button-green","Ajouter un livre"));
 }
 
-function searchForBook(){
-    console.log("Search for Book");
-    createSearchButtonsAndFields();
+function createSearchBookButton(){
+  return(createButton(searchButtonId,"button-green","Rechercher"));
 }
 
-function createSearchButtonsAndFields() {
-  // Clean the add Button
-  document.getElementById("add-button").remove();
+function createCancelButton(){
+  return(createButton(cancelButtonId,"button-red","Annuler"));
+}
+
+
+function createBlokSearchWithButtonsAndFields() {
   console.log("create searchbuttons and fields");
+  
   let searchBlok = document.createElement("div");
-  searchBlok.id = "search-blok";
+  searchBlok.id = searchBlokId;
   h2NewBook.insertAdjacentElement("afterEnd",searchBlok);
+  
   searchBlok.appendChild(document.createElement("p")).textContent = "Titre du livre";
-  let titleBook = document.createElement("input");
-  titleBook.innerHTML = "<p>Titre du livre</p>";
-  titleBook.maxLength = 100;
-  titleBook.required = true;
-  searchBlok.appendChild(titleBook);
+  searchBlok.appendChild(createInputField(titleInputId));
   searchBlok.appendChild(document.createElement("p")).textContent = "Auteur";
-  let authorBook = document.createElement("input");
-  authorBook.maxLength = 100;
-  authorBook.required = true;
-  searchBlok.appendChild(authorBook);
+  searchBlok.appendChild(createInputField(authorInputId));
+  searchBlok.appendChild(document.createElement("p")).textContent = "";
+  searchBlok.appendChild(createSearchBookButton());
+  searchBlok.appendChild(document.createElement("p")).textContent = "";
+  searchBlok.appendChild(createCancelButton());
   
-  
-  let searchButton = document.createElement("button");
-  searchButton.classList.add("button-green");
-  searchButton.innerText = "Rechercher";
-  searchBlok.appendChild(searchButton);
-  let cancelButton = document.createElement("button");
-  cancelButton.classList.add("button-red");
-  cancelButton.innerText = "Annuler";
-  searchBlok.appendChild(cancelButton);
-  searchButton.addEventListener("click",function onClickSearchBookButton(e) {
-    e.preventDefault;
-    console.log("clic SearchButton");
-    searchForBooksWithGoogleApi("Les voies", "Powers");
-  });
-  cancelButton.addEventListener("click",function onClickCancelButton(e) {
-    e.preventDefault;
-    console.log("clic CancelButton");
-    createAddBookButton();
-  });
 }
 
+function createInputField(inputId){
+  let input = document.createElement("input");
+  input.id = inputId;
+  input.maxLength = 100;
+  input.required = true;
+  return input;
+}
+
+function createButton(buttonId, buttonClass, buttonText){
+  let button = document.createElement("button");
+  button.classList.add(buttonClass);
+  button.id = buttonId;
+  button.innerText = buttonText;
+  button.addEventListener("click",actionRouter);
+  return button;
+}
+
+
+function searchForBooks(){
+  let title = document.getElementById(titleInputId);
+  let author = document.getElementById(authorInputId);
+  if ((title.value == "") || (author.value == "")) {
+    console.log("search for books : un des champs est vide");
+  } else {
+    console.log("search for books : titre = ",title.value," auteur = ",author.value);
+    searchForBooksWithGoogleApi(title.value, author.value);
+  }
+}
 
 async function searchForBooksWithGoogleApi(intitle, inauthor) {
   let request = GOOGLE_BOOKS_API + "?q=" + intitle + "+inauthor:" + inauthor;
@@ -87,7 +83,8 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
   .then(function (value){
     console.log(value);
     if (value.items.length > 0) {
-      h2Content.innerText = "Nombre de livres trouvés : " + value.totalItems;
+      //h2Content.innerText = "Nombre de livres trouvés : " + value.totalItems;
+      createResultsBlok();
       for (let book of value.items) {
         showInformationsFoundBook(book);
       }
@@ -101,11 +98,23 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
   });
 }
 
+function createResultsBlok() {
+  let searchBlok = document.getElementById(searchBlokId);
+  let resultBlok = document.createElement("div");
+  resultBlok.id = resultBlokId;
+  searchBlok.insertAdjacentElement("afterend",resultBlok);
+  searchBlok.insertAdjacentElement("afterend",document.createElement("hr"));
+  let h2 = document.createElement("h2");
+  h2.innerText = "Résultats de recherche";
+  resultBlok.appendChild(h2);
+}
+
+
 function showNoFoundBook(book) {
   h2Content.innerText = "Aucun livre n’a été trouvé";
 }
 
-function addFoundBookInContent(book){
+function addFoundBookInResultBlok(book){
   let elementBook = document.createElement("div");
   elementBook.classList.add("Book");
   let elementBookTitle = document.createElement("div");
@@ -119,12 +128,17 @@ function addFoundBookInContent(book){
   elementBookAuthor.innerText = "Auteur : " + book.volumeInfo.authors[0];
   let elementBookDescription = document.createElement("div");
   elementBookDescription.classList.add("Description");
-  if (book.volumeInfo.description != "") {
+  if (book.volumeInfo.description != null) {
     elementBookDescription.innerText = book.volumeInfo.description.substring(0,200);
   } else {
     elementBookDescription.innerText = "Information manquante";
   }
-  content.appendChild(elementBook);
+  if (book.imageLinks.smallThumbnail != null) {
+    console.log("foundBookInfoB : ",book.imageLinks.smallThumbnail);
+  } else {
+    console.log("foundBookInfoB : unavailable.png");
+  }
+  document.getElementById(resultBlokId).appendChild(elementBook);
   elementBook.appendChild(elementBookTitle);
   elementBook.appendChild(elementBookId);
   elementBook.appendChild(elementBookAuthor);
@@ -143,16 +157,45 @@ async function showInformationsFoundBook(book) {
   })
   .then(function (value){
     console.log(value);
-    addFoundBookInContent(value);
+    addFoundBookInResultBlok(value);
+    return value;
   })
   .catch(function(err){
     console.error("erreur appel google API");
   });
 }
 
+function actionRouter(event) {
+  event.preventDefault;
+  switch (this.id){
+    case addButtonId:
+      console.log("clic addButton");
+      // Clean the add Button
+      document.getElementById(addButtonId).remove();
+      createBlokSearchWithButtonsAndFields();
+      break;
+    case searchButtonId:
+      console.log("clic searchButton");
+      searchForBooks();
+        break;
+    case cancelButtonId:
+      // clean search blok if exists
+      let searchBlok = document.getElementById(searchBlokId);
+      if (searchBlok != null) {
+        searchBlok.remove();
+      }
+      console.log("clic cancelButton");
+      // Add AddBookButton
+      h2NewBook.insertAdjacentElement("afterEnd",createAddBookButton());
+      break;
+    default:
+      console.error("clic unknown");
+    }
+}
+
 
 function onLoadPage() {
-    createAddBookButton();    
+    h2NewBook.insertAdjacentElement("afterEnd",createAddBookButton());
 }
 
 const GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes";
@@ -160,6 +203,13 @@ const myBooks = document.getElementById('myBooks');
 const content = document.getElementById('content');
 const h2Content = document.querySelector("#content > h2");
 const h2NewBook = document.querySelector("#myBooks > h2");
+const addButtonId = "addButton";
+const searchButtonId = "searchButton";
+const cancelButtonId = "cancelButton";
+const searchBlokId = "searchBlokId";
+const titleInputId = "titleInputId";
+const authorInputId = "authorInputId";
+const resultBlokId = "resultBlokId";
 
 //showContent();
 onLoadPage();
