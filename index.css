@@ -1,4 +1,17 @@
 
+/* Paramètres du bloc content */
+#content{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 5px;
+}
+
+#content >h2{
+    width: 100%;
+    text-align: center;
+}
+
 /* Paramètres du bloc résultat */
 #resultBlokId{
     display:flex;
@@ -7,7 +20,7 @@
     padding: 5px;
 }
 
-#resultBlokId h2{
+#resultBlokId >h2{
     width: 100%;
     text-align: center;
 }

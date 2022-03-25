@@ -1,16 +1,3 @@
-async function showContent() {
-  try {
-    //const content = await retrieveContent();
-
-    let elt = document.createElement('div');
-    elt.innerHTML = content.join('<br />');
-
-    document.getElementsByTagName('body')[0].appendChild(elt);
-  } catch (e) {
-    console.log('Error', e);
-  }
-}
-
 function createAddBookButton(){
     return(createButton(addButtonId,"button-green","Ajouter un livre"));
 }
@@ -22,7 +9,6 @@ function createSearchBookButton(){
 function createCancelButton(){
   return(createButton(cancelButtonId,"button-red","Annuler"));
 }
-
 
 function createBlokSearchWithButtonsAndFields() {
   console.log("create searchbuttons and fields");
@@ -39,7 +25,6 @@ function createBlokSearchWithButtonsAndFields() {
   searchBlok.appendChild(createSearchBookButton());
   searchBlok.appendChild(document.createElement("p")).textContent = "";
   searchBlok.appendChild(createCancelButton());
-  
 }
 
 function createInputField(inputId){
@@ -87,7 +72,7 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
     if (value.totalItems > 0) {
       //h2Content.innerText = "Nombre de livres trouvés : " + value.totalItems;
       for (let book of value.items) {
-        showInformationsFoundBook(book);
+        showInformationsFoundBook(book.id,resultBlokId);
       }
     } else {
       showNoFoundBook();
@@ -107,24 +92,24 @@ function createResultBlok() {
   resultBlok.insertAdjacentElement("beforebegin",document.createElement("hr"));
 }
 
-function addFoundBookInResultBlok(book){
+function addFoundBookInBlok(book,blokId){
   let elementBook = document.createElement("div");
   elementBook.classList.add("book");
-  let elementBookTitle = document.createElement("div");
+  let elementBookTitle = document.createElement("h2");
   elementBookTitle.classList.add("bookTitle");
   elementBookTitle.innerText = "Titre : " + book.volumeInfo.title;
-  let elementBookId = document.createElement("div");
-  elementBookId.classList.add("bookId");
+  let elementBookId = document.createElement("h3");
+  elementBookId.classList.add(BOOKID_CLASS);
   elementBookId.innerText = "Id : " + book.id;
-  let elementBookAuthor = document.createElement("div");
+  let elementBookAuthor = document.createElement("h4");
   elementBookAuthor.classList.add("bookAuthor");
   elementBookAuthor.innerText = "Auteur : " + book.volumeInfo.authors[0];
-  let elementBookDescription = document.createElement("div");
+  let elementBookDescription = document.createElement("p");
   elementBookDescription.classList.add("bookDescription");
   if (book.volumeInfo.description != null) {
-    elementBookDescription.innerText = book.volumeInfo.description.substring(0,200);
+    elementBookDescription.innerText = "Description : " + book.volumeInfo.description.substring(0,200);
   } else {
-    elementBookDescription.innerText = "Information manquante";
+    elementBookDescription.innerText = "Description : Information manquante";
   }
   let srcBookImage = unaivalablePng;
   if (book.volumeInfo.imageLinks != null) {
@@ -133,12 +118,18 @@ function addFoundBookInResultBlok(book){
       srcBookImage = book.volumeInfo.imageLinks.thumbnail;
     } 
   } 
-  document.getElementById(resultBlokId).appendChild(elementBook);
+  document.getElementById(blokId).appendChild(elementBook);
   elementBook.appendChild(elementBookTitle);
   elementBook.appendChild(elementBookId);
   elementBook.appendChild(elementBookAuthor);
   elementBook.appendChild(elementBookDescription);
   elementBook.appendChild(createImageBook(srcBookImage));
+  if (blokId == resultBlokId) {
+    elementBook.appendChild(createBookMark(BOOKMARK_CLASS,book.id));
+  }
+  if (blokId == CONTENT_ID) {
+    elementBook.appendChild(createBookMark(TRASHCAN_CLASS,book.id));
+  }
 }
 
 function createImageBook(src) {
@@ -149,14 +140,50 @@ function createImageBook(src) {
   return img;
 }
 
+function createBookMark(markClass,bookId){
+  let img = document.createElement("img");
+  img.classList.add(markClass);
+  img.id = bookId;
+  switch (markClass) {
+    case TRASHCAN_CLASS:
+      img.src = TRASHCAN_SRC;
+      img.alt = "trash can image";
+      break;
+    case BOOKMARK_CLASS:
+      img.src = BOOKMARK_SRC;
+      img.alt = "trash can image";
+      break;
+  }
+  img.addEventListener("click",actionBook);
+  return img;
+}
+
+function actionBook(event){
+  event.preventDefault;
+  console.log("actionBook Id = ",this.id);
+  if (this.classList.contains(BOOKMARK_CLASS)) {
+    if (storeBook(this.id)) {
+      showInformationsFoundBook(this.id,CONTENT_ID);
+    }
+  }
+  if (this.classList.contains(TRASHCAN_CLASS)) {
+    removeBook(this.id);
+    this.parentNode.remove();
+  }
+}
+
 function showNoFoundBook() {
   let p = document.createElement("p");
   p.innerText = "Aucun livre n’a été trouvé";
   document.getElementById(resultBlokId).appendChild(p);
 }
 
-async function showInformationsFoundBook(book) {
-  let request = GOOGLE_BOOKS_API + "/" + book.id;
+function alertBookAlreadyExist() {
+  alert("Vous ne pouvez ajouter deux fois le même livre");
+}
+
+async function showInformationsFoundBook(bookId,blokId) {
+  let request = GOOGLE_BOOKS_API + "/" + bookId;
   console.log(request);
   await fetch(request)
   .then(function(res) {
@@ -166,7 +193,7 @@ async function showInformationsFoundBook(book) {
   })
   .then(function (value){
     console.log(value);
-    addFoundBookInResultBlok(value);
+    addFoundBookInBlok(value,blokId);
     return value;
   })
   .catch(function(err){
@@ -213,13 +240,81 @@ function removeElement(elementId) {
   }
 }
 
+async function loadMaPocheList() {
+  let counterOfBooks = 0
+  if (sessionStorage.getItem(COUNTER_OF_BOOKS)) {
+    counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
+  }
+  console.log("load Ma PochList number of books = ",counterOfBooks);
+  let numberOfBooksLoaded = 0;
+  let key = 1;
+  let bookId = null;
+  while (numberOfBooksLoaded < counterOfBooks) {
+    if (sessionStorage.getItem(key)) {
+      bookId = sessionStorage.getItem(key);
+      console.log("LoadMaPocheList avec BookId = ",bookId);
+      showInformationsFoundBook(bookId,CONTENT_ID);
+      numberOfBooksLoaded++;
+    }
+    key++;
+  }
+}
+
+function storeBook(bookId){
+  if (!sessionStorage.getItem(bookId)) {
+    let counterOfBooks = 0
+    if (sessionStorage.getItem(COUNTER_OF_BOOKS)) {
+      counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
+    }
+    console.log("storeBook get counter of books before storing= ",counterOfBooks);
+
+    // Put the BookId with the first free key
+    console.log("storeBook length of SessionStorage before storing = ",sessionStorage.length);
+    // search for free key
+    let key=1;
+    while ((sessionStorage.getItem(key)) && (key<=MAX_BOOK_IN_POCH_LIST)) {
+      key++;
+    }
+    sessionStorage.setItem(key,bookId);
+    sessionStorage.setItem(bookId,key);
+    console.log("storeBookId = ",bookId," in key = ",key);
+    console.log("storeBook length of SessionStorage after storing = ",sessionStorage.length);
+
+    // increment and save the counter of books in my poch list
+    counterOfBooks++;
+    console.log("storeBook save counter of books after storing= ",counterOfBooks);
+    sessionStorage.setItem(COUNTER_OF_BOOKS,counterOfBooks);
+    return true;
+  } else {
+    alertBookAlreadyExist();
+    return false;
+  }
+}
+
+function removeBook(bookId) {
+  if (sessionStorage.getItem(bookId)) {
+    console.log("removeBook key = ", sessionStorage.getItem(bookId));
+    sessionStorage.removeItem(sessionStorage.getItem(bookId));
+    console.log("removeBook bookId = ", bookId);
+    sessionStorage.removeItem(bookId);
+    let counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
+    counterOfBooks--;
+    sessionStorage.setItem(COUNTER_OF_BOOKS,counterOfBooks);
+  }
+}
+
 function onLoadPage() {
+    //sessionStorage.clear();
     h2NewBook.insertAdjacentElement("afterEnd",createAddBookButton());
+    //storeBook("TWKQPwAACAAJ");
+    //storeBook("QvA1EAAAQBAJ");
+    //storeBook("monBookId3");
+    //removeBook("monBookId3");
+    loadMaPocheList();
 }
 
 const GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes";
-const myBooks = document.getElementById('myBooks');
-const content = document.getElementById('content');
+const CONTENT_ID = "content";
 const h2Content = document.querySelector("#content > h2");
 const h2NewBook = document.querySelector("#myBooks > h2");
 const addButtonId = "addButton";
@@ -230,6 +325,13 @@ const titleInputId = "titleInputId";
 const authorInputId = "authorInputId";
 const resultBlokId = "resultBlokId";
 const unaivalablePng = "./img/unavailable.png";
+const BOOKID_CLASS = "bookId";
+const MAX_BOOK_IN_POCH_LIST=100;
+const COUNTER_OF_BOOKS = "COUNTER_OF_BOOKS";
+const BOOKMARK_SRC = "./img/bookmark-solid.svg";
+const TRASHCAN_SRC = "./img/trash-can-solid.svg";
+const BOOKMARK_CLASS = "bookmarkClass";
+const TRASHCAN_CLASS = "trashCanClass";
 
 //showContent();
 onLoadPage();
