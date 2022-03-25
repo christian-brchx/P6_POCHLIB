@@ -67,6 +67,8 @@ function searchForBooks(){
     console.log("search for books : un des champs est vide");
   } else {
     console.log("search for books : titre = ",title.value," auteur = ",author.value);
+    // create a new result Blok
+    createResultBlok();
     searchForBooksWithGoogleApi(title.value, author.value);
   }
 }
@@ -82,14 +84,13 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
   })
   .then(function (value){
     console.log(value);
-    if (value.items.length > 0) {
+    if (value.totalItems > 0) {
       //h2Content.innerText = "Nombre de livres trouvés : " + value.totalItems;
-      createResultsBlok();
       for (let book of value.items) {
         showInformationsFoundBook(book);
       }
     } else {
-      showNoFoundBook;
+      showNoFoundBook();
     }
     return value;
   })
@@ -98,53 +99,61 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
   });
 }
 
-function createResultsBlok() {
-  let searchBlok = document.getElementById(searchBlokId);
+function createResultBlok() {
   let resultBlok = document.createElement("div");
   resultBlok.id = resultBlokId;
-  searchBlok.insertAdjacentElement("afterend",resultBlok);
-  searchBlok.insertAdjacentElement("afterend",document.createElement("hr"));
-  let h2 = document.createElement("h2");
-  h2.innerText = "Résultats de recherche";
-  resultBlok.appendChild(h2);
-}
-
-
-function showNoFoundBook(book) {
-  h2Content.innerText = "Aucun livre n’a été trouvé";
+  resultBlok.appendChild(document.createElement("h2")).innerText="Résultats de recherche";
+  document.getElementById(searchBlokId).insertAdjacentElement("afterend",resultBlok);
+  resultBlok.insertAdjacentElement("beforebegin",document.createElement("hr"));
 }
 
 function addFoundBookInResultBlok(book){
   let elementBook = document.createElement("div");
-  elementBook.classList.add("Book");
+  elementBook.classList.add("book");
   let elementBookTitle = document.createElement("div");
-  elementBookTitle.classList.add("Title");
+  elementBookTitle.classList.add("bookTitle");
   elementBookTitle.innerText = "Titre : " + book.volumeInfo.title;
   let elementBookId = document.createElement("div");
-  elementBookId.classList.add("Id");
+  elementBookId.classList.add("bookId");
   elementBookId.innerText = "Id : " + book.id;
   let elementBookAuthor = document.createElement("div");
-  elementBookAuthor.classList.add("Author");
+  elementBookAuthor.classList.add("bookAuthor");
   elementBookAuthor.innerText = "Auteur : " + book.volumeInfo.authors[0];
   let elementBookDescription = document.createElement("div");
-  elementBookDescription.classList.add("Description");
+  elementBookDescription.classList.add("bookDescription");
   if (book.volumeInfo.description != null) {
     elementBookDescription.innerText = book.volumeInfo.description.substring(0,200);
   } else {
     elementBookDescription.innerText = "Information manquante";
   }
-  if (book.imageLinks.smallThumbnail != null) {
-    console.log("foundBookInfoB : ",book.imageLinks.smallThumbnail);
-  } else {
-    console.log("foundBookInfoB : unavailable.png");
-  }
+  let srcBookImage = unaivalablePng;
+  if (book.volumeInfo.imageLinks != null) {
+    console.log("foundBookInfoB : images available");
+    if (book.volumeInfo.imageLinks.thumbnail != null) {
+      srcBookImage = book.volumeInfo.imageLinks.thumbnail;
+    } 
+  } 
   document.getElementById(resultBlokId).appendChild(elementBook);
   elementBook.appendChild(elementBookTitle);
   elementBook.appendChild(elementBookId);
   elementBook.appendChild(elementBookAuthor);
   elementBook.appendChild(elementBookDescription);
+  elementBook.appendChild(createImageBook(srcBookImage));
 }
 
+function createImageBook(src) {
+  let img = document.createElement("img");
+  img.classList.add("bookImage");
+  img.src = src;
+  img.alt = "book image";
+  return img;
+}
+
+function showNoFoundBook() {
+  let p = document.createElement("p");
+  p.innerText = "Aucun livre n’a été trouvé";
+  document.getElementById(resultBlokId).appendChild(p);
+}
 
 async function showInformationsFoundBook(book) {
   let request = GOOGLE_BOOKS_API + "/" + book.id;
@@ -171,19 +180,19 @@ function actionRouter(event) {
     case addButtonId:
       console.log("clic addButton");
       // Clean the add Button
-      document.getElementById(addButtonId).remove();
+      removeElement(addButtonId);
       createBlokSearchWithButtonsAndFields();
       break;
     case searchButtonId:
       console.log("clic searchButton");
+      // clean old results blok
+      removeElement(resultBlokId);
       searchForBooks();
         break;
     case cancelButtonId:
-      // clean search blok if exists
-      let searchBlok = document.getElementById(searchBlokId);
-      if (searchBlok != null) {
-        searchBlok.remove();
-      }
+      // clean search and result blok
+      removeElement(searchBlokId);
+      removeElement(resultBlokId);
       console.log("clic cancelButton");
       // Add AddBookButton
       h2NewBook.insertAdjacentElement("afterEnd",createAddBookButton());
@@ -193,6 +202,16 @@ function actionRouter(event) {
     }
 }
 
+function removeElement(elementId) {
+  let element = document.getElementById(elementId);
+  if (element != null) {
+    if (element.id == resultBlokId) {
+      // remove the <hr> tag before the resultBlok
+      element.previousElementSibling.remove();
+    }
+    element.remove();
+  }
+}
 
 function onLoadPage() {
     h2NewBook.insertAdjacentElement("afterEnd",createAddBookButton());
@@ -210,6 +229,7 @@ const searchBlokId = "searchBlokId";
 const titleInputId = "titleInputId";
 const authorInputId = "authorInputId";
 const resultBlokId = "resultBlokId";
+const unaivalablePng = "./img/unavailable.png";
 
 //showContent();
 onLoadPage();

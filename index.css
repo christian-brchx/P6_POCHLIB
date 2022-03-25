@@ -1,0 +1,26 @@
+
+/* Paramètres du bloc résultat */
+#resultBlokId{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 5px;
+}
+
+#resultBlokId h2{
+    width: 100%;
+    text-align: center;
+}
+
+/* Paramètres des livres */
+.book{
+    border: 1px black solid;
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    background-color: rgb(200,200,200);
+}
+
+.bookImage{
+    max-height: 100px;
+}
