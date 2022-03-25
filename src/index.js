@@ -107,7 +107,7 @@ function addFoundBookInBlok(book,blokId){
   let elementBookDescription = document.createElement("p");
   elementBookDescription.classList.add("bookDescription");
   if (book.volumeInfo.description != null) {
-    elementBookDescription.innerText = "Description : " + book.volumeInfo.description.substring(0,200);
+    elementBookDescription.innerHTML = "Description : " + book.volumeInfo.description.substring(0,200);
   } else {
     elementBookDescription.innerText = "Description : Information manquante";
   }
@@ -119,17 +119,17 @@ function addFoundBookInBlok(book,blokId){
     } 
   } 
   document.getElementById(blokId).appendChild(elementBook);
-  elementBook.appendChild(elementBookTitle);
-  elementBook.appendChild(elementBookId);
-  elementBook.appendChild(elementBookAuthor);
-  elementBook.appendChild(elementBookDescription);
-  elementBook.appendChild(createImageBook(srcBookImage));
   if (blokId == resultBlokId) {
     elementBook.appendChild(createBookMark(BOOKMARK_CLASS,book.id));
   }
   if (blokId == CONTENT_ID) {
     elementBook.appendChild(createBookMark(TRASHCAN_CLASS,book.id));
   }
+  elementBook.appendChild(elementBookTitle);
+  elementBook.appendChild(elementBookId);
+  elementBook.appendChild(elementBookAuthor);
+  elementBook.appendChild(elementBookDescription);
+  elementBook.appendChild(createImageBook(srcBookImage));
 }
 
 function createImageBook(src) {
