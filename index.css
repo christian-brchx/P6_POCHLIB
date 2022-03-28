@@ -44,7 +44,6 @@
 }
 .trashCanClass:active{
 	border: 1px rgb(120,120,120) solid;
-	text-shadow: 6 6 6 rgb(120,120,120);
 }
 .bookmarkClass{
 	float: right;
@@ -52,5 +51,4 @@
 }
 .bookmarkClass:active{
 	border: 1px rgb(120,120,120) solid;
-	text-shadow: 6 6 6 rgb(120,120,120);
 }

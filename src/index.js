@@ -50,6 +50,7 @@ function searchForBooks(){
   let author = document.getElementById(authorInputId);
   if ((title.value == "") || (author.value == "")) {
     console.log("search for books : un des champs est vide");
+    alertEmptySearchField();
   } else {
     console.log("search for books : titre = ",title.value," auteur = ",author.value);
     // create a new result Blok
@@ -148,10 +149,12 @@ function createBookMark(markClass,bookId){
     case TRASHCAN_CLASS:
       img.src = TRASHCAN_SRC;
       img.alt = "trash can image";
+      img.title = "cliquez pour supprimer de votre poch'list";
       break;
     case BOOKMARK_CLASS:
       img.src = BOOKMARK_SRC;
-      img.alt = "trash can image";
+      img.alt = "bookmark image";
+      img.title = "cliquez pour ajouter à votre poch'list";
       break;
   }
   img.addEventListener("click",actionBook);
@@ -181,6 +184,11 @@ function showNoFoundBook() {
 function alertBookAlreadyExist() {
   alert("Vous ne pouvez ajouter deux fois le même livre");
 }
+
+function alertEmptySearchField() {
+  alert("Vous devez renseigner le titre et l'auteur pour effectuer une recherche");
+}
+
 
 async function showInformationsFoundBook(bookId,blokId) {
   let request = GOOGLE_BOOKS_API + "/" + bookId;
