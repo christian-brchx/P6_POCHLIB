@@ -1,15 +1,68 @@
+body{
+    font-family: 'PT Sans', sans-serif;
+    font-size: 8pt;
+}
+
+h1{
+    font-size: 10pt;
+    color: rgb(0,0,0,0.6);
+    padding: 10px;
+    background-color: rgb(240,240,240);
+    border: 1px rgb(150,150,150) solid;
+    border-radius: 3px;
+    box-shadow: 0px 4px 1px rgb(200,200,200);
+    text-align: center;
+}
+
+h2{
+    margin: auto;
+    text-align: center;
+    font-size: 9pt;
+    font-weight: bold;
+}
+
+button{
+    width: 100px;
+    color: white;
+    font-size:8pt;
+    padding: 5px;
+}
+
+.button-green{
+    background-color: rgb(63,181,150);
+	border: 1px rgb(63,181,150) solid;
+    border-radius: 3px;
+}
+.button-red{
+    background-color: rgb(255, 154, 86);
+	border: 1px rgb(255, 154, 86) solid;
+    border-radius: 3px;
+}
+
+#addButton{
+    display: block;
+    margin:auto;
+    margin-top: 10px;
+}
+
+/* Le champ input déborde du bloc si 100% */
+input{
+    width:98%;
+}
 
 /* Paramètres du bloc content */
 #content{
     display:flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    padding: 5px;
+    padding: 0px;
+    margin: 0px;
 }
 
 #content >h2{
     width: 100%;
     text-align: center;
+    margin-bottom: 1em;
 }
 
 /* Paramètres du bloc résultat */
@@ -17,38 +70,48 @@
     display:flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    padding: 5px;
+    padding: 0px;
 }
 
 #resultBlokId >h2{
     width: 100%;
     text-align: center;
+    margin-bottom: 1em;
 }
 
 /* Paramètres des livres */
 .book{
     border: 1px black solid;
-    width: 200px;
+    width: 140px;
     padding: 10px;
-    margin: 10px;
+    margin: 5px;
     background-color: rgb(200,200,200);
+    font-size: 8pt;
+}
+
+.book .title{
+    font-weight: bold;
+}
+
+.book .id {
+    font-style:italic;
+    font-weight: bold;
+}
+
+.book .description {
+    color: rgb(0,0,0,0.8);
 }
 
 .bookImage{
-    max-height: 100px;
+    display: block;
+    margin:auto;
+    height: 100px;
 }
 
-.trashCanClass{
+.fa-solid{
 	float: right;
 	width: 10%;
 }
-.trashCanClass:active{
-	border: 1px rgb(120,120,120) solid;
-}
-.bookmarkClass{
-	float: right;
-	width: 10%;
-}
-.bookmarkClass:active{
+.fa-solid:active{
 	border: 1px rgb(120,120,120) solid;
 }
