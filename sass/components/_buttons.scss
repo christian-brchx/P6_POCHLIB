@@ -1,0 +1,12 @@
+.button{
+    width: 100px;
+    color: white;
+    font-size:8pt;
+    padding: 5px;
+    @include btn-colors($btn-colors);
+    &--center{
+        display: block;
+        margin:auto;
+        margin-top: 10px;
+    }
+}

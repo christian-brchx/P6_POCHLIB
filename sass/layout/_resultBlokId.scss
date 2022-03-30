@@ -1,0 +1,13 @@
+/* Paramètres du bloc résultat */
+#resultBlokId{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 0px;
+}
+
+#resultBlokId >h2{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1em;
+}

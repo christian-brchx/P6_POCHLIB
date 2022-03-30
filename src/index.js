@@ -5,15 +5,17 @@ function LogInConsole(message) {
 }
 
 function createAddBookButton(){
-    return(createButton(addButtonId,"button-green","Ajouter un livre"));
+    let btn = createButton(addButtonId,"button--green","Ajouter un livre");
+    btn.classList.add("button--center");
+    return btn;
 }
 
 function createSearchBookButton(){
-  return(createButton(searchButtonId,"button-green","Rechercher"));
+  return(createButton(searchButtonId,"button--green","Rechercher"));
 }
 
 function createCancelButton(){
-  return(createButton(cancelButtonId,"button-red","Annuler"));
+  return(createButton(cancelButtonId,"button--red","Annuler"));
 }
 
 function createBlokSearchWithButtonsAndFields() {
@@ -41,6 +43,7 @@ function createInputField(inputId){
 
 function createButton(buttonId, buttonClass, buttonText){
   let button = document.createElement("button");
+  button.classList.add("button");
   button.classList.add(buttonClass);
   button.id = buttonId;
   button.innerText = buttonText;
@@ -139,7 +142,7 @@ function addFoundBookInBlok(book,blokId){
 
 function createImageBook(src) {
   let img = document.createElement("img");
-  img.classList.add("bookImage");
+  img.classList.add(IMAGE_CLASS);
   img.src = src;
   img.alt = "book image";
   return img;
@@ -147,7 +150,7 @@ function createImageBook(src) {
 
 function createSolidBookMark(markClass,bookId){
   let img = document.createElement("img");
-  img.classList.add("fa-solid");
+  img.classList.add("book__fa-solid");
   img.classList.add(markClass);
   img.id = bookId;
   switch (markClass) {
@@ -337,16 +340,17 @@ const searchBlokId = "searchBlokId";
 const titleInputId = "titleInputId";
 const authorInputId = "authorInputId";
 const resultBlokId = "resultBlokId";
-const UNAVAILABLE_PNG = "./img/unavailable.png";
+const UNAVAILABLE_PNG = "./public/img/unavailable.png";
 const BOOK_CLASS = "book";
-const TITLE_CLASS = "title";
-const AUTHOR_CLASS = "author";
-const ID_CLASS = "id";
-const DESCRIPTION_CLASS = "description";
+const TITLE_CLASS = "book__title";
+const AUTHOR_CLASS = "book__author";
+const ID_CLASS = "book__id";
+const DESCRIPTION_CLASS = "book__description";
+const IMAGE_CLASS ="book__image";
 const MAX_BOOK_IN_POCH_LIST=100;
 const COUNTER_OF_BOOKS = "COUNTER_OF_BOOKS";
-const BOOKMARK_SRC = "./img/bookmark-solid-green.svg";
-const TRASHCAN_SRC = "./img/trash-can-solid.svg";
+const BOOKMARK_SRC = "./public/img/bookmark-solid-green.svg";
+const TRASHCAN_SRC = "./public/img/trash-can-solid.svg";
 const BOOKMARK_CLASS = "fa-bookmark";
 const TRASHCAN_CLASS = "fa-trash-can";
 const LOG_IN_CONSOLE = true;

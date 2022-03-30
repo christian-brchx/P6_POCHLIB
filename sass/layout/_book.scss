@@ -1,0 +1,20 @@
+/* Paramètres des livres */
+.book{
+    border: 1px black solid;
+    width: 140px;
+    padding: 10px;
+    margin: 5px;
+    background-color: rgb(200,200,200);
+    &__image{
+        display: block;
+        margin:auto;
+        height: 100px;
+    }
+    &__fa-solid{
+        float: right;
+        width: 10%;
+        &:active{
+            border: 1px rgb(120,120,120) solid;
+        }
+    }
+}
