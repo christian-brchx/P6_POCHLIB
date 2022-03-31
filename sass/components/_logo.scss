@@ -1,0 +1,8 @@
+.logo{
+    display:block;
+    margin:auto;
+    width:60px;
+    @include mobile-except{
+        width : 100px;
+    }
+}

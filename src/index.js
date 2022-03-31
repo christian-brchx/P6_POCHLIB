@@ -1,4 +1,4 @@
-function LogInConsole(message) {
+function logInConsole(message) {
   if (LOG_IN_CONSOLE) {
     console.log(message);
   }
@@ -19,7 +19,7 @@ function createCancelButton(){
 }
 
 function createBlokSearchWithButtonsAndFields() {
-  console.log("create searchbuttons and fields");
+  logInConsole("create searchbuttons and fields");
   
   let searchBlok = document.createElement("div");
   searchBlok.id = searchBlokId;
@@ -56,10 +56,10 @@ function searchForBooks(){
   let title = document.getElementById(titleInputId);
   let author = document.getElementById(authorInputId);
   if ((title.value == "") || (author.value == "")) {
-    LogInConsole("search for books : un des champs est vide");
+    logInConsole("search for books : un des champs est vide");
     alertEmptySearchField();
   } else {
-    LogInConsole("search for books : titre = ",title.value," auteur = ",author.value);
+    logInConsole("search for books : titre = ",title.value," auteur = ",author.value);
     // create a new result Blok
     createResultBlok();
     searchForBooksWithGoogleApi(title.value, author.value);
@@ -68,7 +68,7 @@ function searchForBooks(){
 
 async function searchForBooksWithGoogleApi(intitle, inauthor) {
   let request = GOOGLE_BOOKS_API + "?q=" + intitle + "+inauthor:" + inauthor;
-  LogInConsole(request);
+  logInConsole(request);
   await fetch(request)
   .then(function(res) {
     if (res.ok){
@@ -76,7 +76,7 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
     }
   })
   .then(function (value){
-    LogInConsole(value);
+    logInConsole(value);
     if (value.totalItems > 0) {
       for (let book of value.items) {
         showInformationsFoundBook(book.id,resultBlokId);
@@ -87,7 +87,7 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
     return value;
   })
   .catch(function(err){
-    LogInConsole();("erreur appel google API");
+    logInConsole();("erreur appel google API");
   });
 }
 
@@ -114,14 +114,14 @@ function addFoundBookInBlok(book,blokId){
   let elementBookDescription = document.createElement("p");
   elementBookDescription.classList.add(DESCRIPTION_CLASS);
   if (book.volumeInfo.description != null) {
-    LogInConsole(book.volumeInfo.description.substring(0,200));
+    logInConsole(book.volumeInfo.description.substring(0,200));
     elementBookDescription.innerHTML = "Description : " + book.volumeInfo.description.substring(0,200);
   } else {
     elementBookDescription.innerText = "Description : Information manquante";
   }
   let srcBookImage = UNAVAILABLE_PNG;
   if (book.volumeInfo.imageLinks != null) {
-    LogInConsole("foundBookInfoB : images available");
+    logInConsole("foundBookInfoB : images available");
     if (book.volumeInfo.imageLinks.thumbnail != null) {
       srcBookImage = book.volumeInfo.imageLinks.thumbnail;
     } 
@@ -171,7 +171,7 @@ function createSolidBookMark(markClass,bookId){
 
 function actionBook(event){
   event.preventDefault;
-  console.log("actionBook Id = ",this.id);
+  logInConsole("actionBook Id = ",this.id);
   if (this.classList.contains(BOOKMARK_CLASS)) {
     if (storeBook(this.id)) {
       showInformationsFoundBook(this.id,CONTENT_ID);
@@ -200,7 +200,7 @@ function alertEmptySearchField() {
 
 async function showInformationsFoundBook(bookId,blokId) {
   let request = GOOGLE_BOOKS_API + "/" + bookId;
-  LogInConsole(request);
+  logInConsole(request);
   await fetch(request)
   .then(function(res) {
     if (res.ok){
@@ -208,7 +208,7 @@ async function showInformationsFoundBook(bookId,blokId) {
     }
   })
   .then(function (value){
-    LogInConsole(value);
+    logInConsole(value);
     addFoundBookInBlok(value,blokId);
     return value;
   })
@@ -221,13 +221,13 @@ function actionRouter(event) {
   event.preventDefault;
   switch (this.id){
     case addButtonId:
-      LogInConsole("clic addButton");
+      logInConsole("clic addButton");
       // Clean the add Button
       removeElement(addButtonId);
       createBlokSearchWithButtonsAndFields();
       break;
     case searchButtonId:
-      LogInConsole("clic searchButton");
+      logInConsole("clic searchButton");
       // clean old results blok
       removeElement(resultBlokId);
       searchForBooks();
@@ -236,12 +236,12 @@ function actionRouter(event) {
       // clean search and result blok
       removeElement(searchBlokId);
       removeElement(resultBlokId);
-      LogInConsole("clic cancelButton");
+      logInConsole("clic cancelButton");
       // Add AddBookButton
       h2NewBook.insertAdjacentElement("afterEnd",createAddBookButton());
       break;
     default:
-      LogInConsole("clic unknown");
+      logInConsole("clic unknown");
     }
 }
 
@@ -261,14 +261,14 @@ async function loadMaPocheList() {
   if (sessionStorage.getItem(COUNTER_OF_BOOKS)) {
     counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
   }
-  LogInConsole("load Ma PochList number of books = ",counterOfBooks);
+  logInConsole("load Ma PochList number of books = ",counterOfBooks);
   let numberOfBooksLoaded = 0;
   let key = 1;
   let bookId = null;
   while (numberOfBooksLoaded < counterOfBooks) {
     if (sessionStorage.getItem(key)) {
       bookId = sessionStorage.getItem(key);
-      LogInConsole("LoadMaPocheList avec BookId = ",bookId);
+      logInConsole("LoadMaPocheList avec BookId = ",bookId);
       showInformationsFoundBook(bookId,CONTENT_ID);
       numberOfBooksLoaded++;
     }
@@ -282,10 +282,10 @@ function storeBook(bookId){
     if (sessionStorage.getItem(COUNTER_OF_BOOKS)) {
       counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
     }
-    LogInConsole("storeBook get counter of books before storing= ",counterOfBooks);
+    logInConsole("storeBook get counter of books before storing= ",counterOfBooks);
 
     // Put the BookId with the first free key
-    LogInConsole("storeBook length of SessionStorage before storing = ",sessionStorage.length);
+    logInConsole("storeBook length of SessionStorage before storing = ",sessionStorage.length);
     // search for free key
     let key=1;
     while ((sessionStorage.getItem(key)) && (key<=MAX_BOOK_IN_POCH_LIST)) {
@@ -293,12 +293,12 @@ function storeBook(bookId){
     }
     sessionStorage.setItem(key,bookId);
     sessionStorage.setItem(bookId,key);
-    LogInConsole("storeBookId = ",bookId," in key = ",key);
-    LogInConsole("storeBook length of SessionStorage after storing = ",sessionStorage.length);
+    logInConsole("storeBookId = ",bookId," in key = ",key);
+    logInConsole("storeBook length of SessionStorage after storing = ",sessionStorage.length);
 
     // increment and save the number of books selected
     counterOfBooks++;
-    LogInConsole("storeBook save counter of books after storing= ",counterOfBooks);
+    logInConsole("storeBook save counter of books after storing= ",counterOfBooks);
     sessionStorage.setItem(COUNTER_OF_BOOKS,counterOfBooks);
     return true;
   } else {
@@ -309,9 +309,9 @@ function storeBook(bookId){
 
 function removeBook(bookId) {
   if (sessionStorage.getItem(bookId)) {
-    LogInConsole("removeBook key = ", sessionStorage.getItem(bookId));
+    logInConsole("removeBook key = ", sessionStorage.getItem(bookId));
     sessionStorage.removeItem(sessionStorage.getItem(bookId));
-    LogInConsole("removeBook bookId = ", bookId);
+    logInConsole("removeBook bookId = ", bookId);
     sessionStorage.removeItem(bookId);
     let counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
     counterOfBooks--;
@@ -353,7 +353,7 @@ const BOOKMARK_SRC = "./public/img/bookmark-solid-green.svg";
 const TRASHCAN_SRC = "./public/img/trash-can-solid.svg";
 const BOOKMARK_CLASS = "fa-bookmark";
 const TRASHCAN_CLASS = "fa-trash-can";
-const LOG_IN_CONSOLE = true;
+//const LOG_IN_CONSOLE = true;
 
 //showContent();
 onLoadPage();

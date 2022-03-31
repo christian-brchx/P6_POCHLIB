@@ -1,20 +1,77 @@
 /* Paramètres des livres */
 .book{
     border: 1px black solid;
-    width: 140px;
     padding: 10px;
     margin: 5px;
     background-color: rgb(200,200,200);
+    @include mobile-only{
+        width: 140px;
+    }
+    @include mobile-except{
+        width: 250px;
+    }
+    &__title{
+        @include mobile-only{
+            //height: 40px;
+            margin-top: 5px;
+        }
+        @include mobile-except{
+            //height: 50px;
+            margin-top: 10px;
+        }
+    }
+    &__id{
+        @include mobile-only{
+            //height: 30px;
+            margin-top: 5px;
+        }
+        @include mobile-except{
+            //height: 50px;
+            margin-top: 10px;
+        }
+    }
+    &__author{
+        @include mobile-only{
+            //height: 30px;
+            margin-top: 5px;
+        }
+        @include mobile-except{
+            //height: 50px;
+            margin-top: 10px;
+        }
+    }
+    &__description{
+        @include mobile-only{
+            //height: 130px;
+            margin-top: 5px;
+        }
+        @include mobile-except{
+            height: 180px;
+            margin-top: 10px;
+        }
+    }
     &__image{
         display: block;
         margin:auto;
-        height: 100px;
+        @include mobile-only{
+            height: 100px;
+        }
+        @include mobile-except{
+            height: 150px;
+        }
     }
     &__fa-solid{
         float: right;
         width: 10%;
         &:active{
-            border: 1px rgb(120,120,120) solid;
+            border: 1px rgb(200,200,200) solid;
+        }
+        @include mobile-except{
+            transition: transform 400ms;
+            &:hover{
+                transform: scale(1.20);
+                cursor:pointer;
+            }
         }
     }
 }

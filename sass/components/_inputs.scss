@@ -1,4 +1,7 @@
 /* Le champ input déborde du bloc si 100% */
 input{
     width:98%;
+    @include mobile-except{
+        width : 99%;
+    }
 }

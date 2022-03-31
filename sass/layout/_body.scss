@@ -1,0 +1,10 @@
+body{
+    @include mobile-except{
+        margin: auto;
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px black solid;
+        border-radius: 3px;
+        width: 80%;
+    }
+}

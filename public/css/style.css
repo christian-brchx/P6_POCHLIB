@@ -1,28 +1,71 @@
 @charset "UTF-8";
 body {
   font-family: "PT Sans", sans-serif;
-  font-size: 8pt;
   color: black;
+}
+@media screen and (max-width: 599px) {
+  body {
+    font-size: 8pt;
+  }
+}
+@media screen and (min-width: 600px) {
+  body {
+    font-size: 11pt;
+  }
 }
 
 .title {
-  font-size: 10pt;
   color: rgba(0, 0, 0, 0.6);
+}
+@media screen and (max-width: 599px) {
+  .title {
+    font-size: 10pt;
+  }
+}
+@media screen and (min-width: 600px) {
+  .title {
+    font-size: 15pt;
+  }
 }
 
 h2 {
-  font-size: 9pt;
   font-weight: bold;
 }
+@media screen and (max-width: 599px) {
+  h2 {
+    font-size: 9pt;
+  }
+}
+@media screen and (min-width: 600px) {
+  h2 {
+    font-size: 12pt;
+  }
+}
 
-button {
-  font-size: 8pt;
+.button {
   color: white;
+}
+@media screen and (max-width: 599px) {
+  .button {
+    font-size: 8pt;
+  }
+}
+@media screen and (min-width: 600px) {
+  .button {
+    font-size: 14pt;
+  }
 }
 
 /* Paramètres des livres */
-.book {
-  font-size: 8pt;
+@media screen and (max-width: 599px) {
+  .book {
+    font-size: 8pt;
+  }
+}
+@media screen and (min-width: 600px) {
+  .book {
+    font-size: 11pt;
+  }
 }
 .book__title {
   font-weight: bold;
@@ -36,10 +79,23 @@ button {
 }
 
 .button {
-  width: 100px;
   color: white;
-  font-size: 8pt;
   padding: 5px;
+}
+@media screen and (max-width: 599px) {
+  .button {
+    width: 100px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .button {
+    width: 200px;
+    transition: transform 400ms;
+  }
+  .button:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
 }
 .button--red {
   background-color: #FF9A56;
@@ -61,6 +117,11 @@ button {
 input {
   width: 98%;
 }
+@media screen and (min-width: 600px) {
+  input {
+    width: 99%;
+  }
+}
 
 .title {
   padding: 10px;
@@ -76,25 +137,104 @@ input {
   text-align: center;
 }
 
+.logo {
+  display: block;
+  margin: auto;
+  width: 60px;
+}
+@media screen and (min-width: 600px) {
+  .logo {
+    width: 100px;
+  }
+}
+
 /* Paramètres des livres */
 .book {
   border: 1px black solid;
-  width: 140px;
   padding: 10px;
   margin: 5px;
   background-color: #c8c8c8;
 }
+@media screen and (max-width: 599px) {
+  .book {
+    width: 140px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .book {
+    width: 250px;
+  }
+}
+@media screen and (max-width: 599px) {
+  .book__title {
+    margin-top: 5px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .book__title {
+    margin-top: 10px;
+  }
+}
+@media screen and (max-width: 599px) {
+  .book__id {
+    margin-top: 5px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .book__id {
+    margin-top: 10px;
+  }
+}
+@media screen and (max-width: 599px) {
+  .book__author {
+    margin-top: 5px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .book__author {
+    margin-top: 10px;
+  }
+}
+@media screen and (max-width: 599px) {
+  .book__description {
+    margin-top: 5px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .book__description {
+    height: 180px;
+    margin-top: 10px;
+  }
+}
 .book__image {
   display: block;
   margin: auto;
-  height: 100px;
+}
+@media screen and (max-width: 599px) {
+  .book__image {
+    height: 100px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .book__image {
+    height: 150px;
+  }
 }
 .book__fa-solid {
   float: right;
   width: 10%;
 }
 .book__fa-solid:active {
-  border: 1px #787878 solid;
+  border: 1px #c8c8c8 solid;
+}
+@media screen and (min-width: 600px) {
+  .book__fa-solid {
+    transition: transform 400ms;
+  }
+  .book__fa-solid:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
 }
 
 /* Paramètres du bloc content */
@@ -123,6 +263,17 @@ input {
   width: 100%;
   text-align: center;
   margin-bottom: 1em;
+}
+
+@media screen and (min-width: 600px) {
+  body {
+    margin: auto;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px black solid;
+    border-radius: 3px;
+    width: 80%;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */
