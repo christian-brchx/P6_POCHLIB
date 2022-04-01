@@ -1,0 +1,14 @@
+#searchBlokId >p {
+    @include tablette-only{
+        display: inline-block;
+        margin-right: 10px;
+        text-align:right;
+        width:15%;
+    }
+    @include bureau-only{
+        display: inline-block;
+        margin-right: 10px;
+        text-align:right;
+        width:10%;
+    }
+}

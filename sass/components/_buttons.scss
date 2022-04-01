@@ -1,8 +1,13 @@
 .button{
+    display: block;
+    margin-top: 10px;
     @include mobile-only{
         width: 100px;
     }
-    @include mobile-except{
+    @include tablette-only{
+        width: 130px;
+    }
+    @include bureau-only{
         width : 200px;
         transition: transform 400ms;
         &:hover{
@@ -14,7 +19,6 @@
     padding: 5px;
     @include btn-colors($btn-colors);
     &--center{
-        display: block;
         margin:auto;
         margin-top: 10px;
     }

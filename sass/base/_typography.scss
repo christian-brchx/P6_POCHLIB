@@ -3,7 +3,10 @@ body{
     @include mobile-only{
         font-size: 8pt;
     }
-    @include mobile-except{
+    @include tablette-only{
+        font-size: 9pt;
+    }
+    @include bureau-only{
         font-size: 11pt;
     }
     color: black;
@@ -13,7 +16,10 @@ body{
     @include mobile-only{
         font-size: 10pt;
     }
-    @include mobile-except{
+    @include tablette-only{
+        font-size: 12pt;
+    }
+    @include bureau-only{
         font-size: 15pt;
     }
     color: rgb(0,0,0,0.6);
@@ -23,17 +29,17 @@ h2{
     @include mobile-only{
         font-size: 9pt;
     }
-    @include mobile-except{
+    @include tablette-only{
+        font-size: 10pt;
+    }
+    @include bureau-only{
         font-size: 12pt;
     }
     font-weight: bold;
 }
 
 .button{
-    @include mobile-only{
-        font-size:8pt;
-    }
-    @include mobile-except{
+    @include bureau-only{
         font-size: 14pt;
     }
     color: white;
@@ -41,12 +47,6 @@ h2{
 
 /* Paramètres des livres */
 .book{
-    @include mobile-only{
-        font-size: 8pt;
-    }
-    @include mobile-except{
-        font-size: 11pt;
-    }
     &__title{
         font-weight: bold;
     }
@@ -55,6 +55,15 @@ h2{
         font-weight: bold;
     }
     &__description{
+        @include mobile-only{
+            font-size: 7pt;
+        }
+        @include tablette-only{
+            font-size: 8pt;
+        }
+        @include bureau-only{
+            font-size: 10pt;
+        }
         color: rgb(0,0,0,0.8);
     }
 }

@@ -7,9 +7,13 @@
         }
     }
 }
-
-@mixin mobile-except{
-    @media screen and(min-width:600px){
+@mixin bureau-only{
+    @media screen and(min-width:1281px){
+        @content;
+    }
+}
+@mixin tablette-only{
+    @media screen and(min-width:600px) and(max-width:1280px){
         @content;
     }
 }

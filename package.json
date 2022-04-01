@@ -4,7 +4,7 @@
   "description": "OpenClassRooms Project : Créez une interface utilisateur pour votre application, using SASS, a CSS precompiler.",
   "main": "index.js",
   "scripts": {
-    "sassnested": "sass --watch ./sass/main.scss:./public/css/style.css",
+    "sass": "sass --watch ./sass/main.scss:./public/css/style.css",
     "sasscompressed": "sass --watch ./sass/main.scss:./public/css/style.css --style compressed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

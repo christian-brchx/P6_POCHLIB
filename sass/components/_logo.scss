@@ -1,8 +1,19 @@
 .logo{
     display:block;
     margin:auto;
-    width:60px;
-    @include mobile-except{
+    @include mobile-only{
+        width:60px;
+    }
+    @include tablette-only{
+        width:80px;
+    }
+    @include bureau-only{
         width : 100px;
+        transform: rotate(0);
+        transition: transform 400ms;
+        transition-timing-function: cubic-bezier(.93,0,.09,1);
+        &:hover{
+            transform:rotateY(360deg);
+        }
     }
 }

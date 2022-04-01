@@ -6,57 +6,87 @@
     background-color: rgb(200,200,200);
     @include mobile-only{
         width: 140px;
+        height: 245px;
     }
-    @include mobile-except{
+    @include tablette-only{
+        width: 200px;
+        height: 350px;
+    }
+    @include bureau-only{
         width: 250px;
+        height: 435px;
     }
     &__title{
+        overflow: hidden;
         @include mobile-only{
-            //height: 40px;
-            margin-top: 5px;
+            padding: 2px;
+            height: 10px;
         }
-        @include mobile-except{
-            //height: 50px;
-            margin-top: 10px;
+        @include tablette-only{
+            padding: 2px;
+            height: 15px;
+        }
+        @include bureau-only{
+            padding: 3px;
+            height: 18px;
         }
     }
     &__id{
+        overflow: hidden;
         @include mobile-only{
-            //height: 30px;
-            margin-top: 5px;
+            padding: 2px;
+            height: 10px;
         }
-        @include mobile-except{
-            //height: 50px;
-            margin-top: 10px;
+        @include tablette-only{
+            padding: 2px;
+            height: 15px;
+        }
+        @include bureau-only{
+            padding: 3px;
+            height: 18px;
         }
     }
     &__author{
+        overflow: hidden;
         @include mobile-only{
-            //height: 30px;
-            margin-top: 5px;
+            padding: 2px;
+            height: 10px;
         }
-        @include mobile-except{
-            //height: 50px;
-            margin-top: 10px;
+        @include tablette-only{
+            padding: 2px;
+            height: 15px;
+        }
+        @include bureau-only{
+            padding: 3px;
+            height: 18px;
         }
     }
     &__description{
+        overflow: hidden;
         @include mobile-only{
-            //height: 130px;
-            margin-top: 5px;
+            padding: 2px;
+            height: 108px;
         }
-        @include mobile-except{
-            height: 180px;
-            margin-top: 10px;
+        @include tablette-only{
+            padding: 2px;
+            height: 160px;
+        }
+        @include bureau-only{
+            padding: 3px;
+            height: 200px;
         }
     }
     &__image{
         display: block;
         margin:auto;
+        margin-top: 2px;
         @include mobile-only{
-            height: 100px;
+            height: 96px;
         }
-        @include mobile-except{
+        @include tablette-only{
+            height: 120px;
+        }
+        @include bureau-only{
             height: 150px;
         }
     }
@@ -66,7 +96,7 @@
         &:active{
             border: 1px rgb(200,200,200) solid;
         }
-        @include mobile-except{
+        @include bureau-only{
             transition: transform 400ms;
             &:hover{
                 transform: scale(1.20);
