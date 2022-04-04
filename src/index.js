@@ -262,50 +262,57 @@ function removeElement(elementId) {
   }
 }
 
-async function loadMaPocheList() {
-  let counterOfBooks = 0
-  if (sessionStorage.getItem(COUNTER_OF_BOOKS)) {
-    counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
-  }
-  logInConsole("load Ma PochList number of books = " + counterOfBooks);
+async function loadMyPochList() {
+  let tabOfBooks = getMyPochList();
+  logInConsole("load Ma PochList number of books = " + tabOfBooks.length);
   let numberOfBooksLoaded = 0;
-  let key = 1;
-  let bookId = null;
-  while (numberOfBooksLoaded < counterOfBooks) {
-    if (sessionStorage.getItem(key)) {
-      bookId = sessionStorage.getItem(key);
-      logInConsole("LoadMaPocheList avec BookId = " + bookId);
-      showInformationsFoundBook(bookId,CONTENT_ID);
-      numberOfBooksLoaded++;
-    }
-    key++;
+  while (numberOfBooksLoaded < tabOfBooks.length) {
+    logInConsole("LoadMyPochList with BookId = " + tabOfBooks[numberOfBooksLoaded]);
+    showInformationsFoundBook(tabOfBooks[numberOfBooksLoaded],CONTENT_ID);
+    numberOfBooksLoaded++;
   }
 }
 
+function getMyPochList(){
+  let tabOfBooks = [];
+  if (sessionStorage.getItem(MAPOCHLISTE)) {
+    tabOfBooks = JSON.parse(sessionStorage.getItem(MAPOCHLISTE));
+  }
+  logInConsole("getMyPochList = " + tabOfBooks);
+  return tabOfBooks;
+}
+
+function saveMyPochList(tabOfBooks){
+  let tabOfBooksToSave = [];
+  for (let bookId of tabOfBooks) {
+    if (bookId != REMOVED) {
+      tabOfBooksToSave.push(bookId);
+    }
+  }
+  sessionStorage.setItem(MAPOCHLISTE,JSON.stringify(tabOfBooksToSave));
+  logInConsole("SaveMyPochList = " + tabOfBooksToSave);
+}
+
+function existBookInMyPochList(bookId,){
+  let tabOfBooks = getMyPochList();
+  let find = false;
+  let index = 0;
+  while ((index < tabOfBooks.length) && !(find)) {
+    if (tabOfBooks[index] == bookId) {
+      find = true;
+    };
+    index++;
+  }
+  return find;
+}
+
 function storeBook(bookId){
-  if (!sessionStorage.getItem(bookId)) {
-    let counterOfBooks = 0
-    if (sessionStorage.getItem(COUNTER_OF_BOOKS)) {
-      counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
-    }
-    logInConsole("storeBook get counter of books before storing= " + counterOfBooks);
-
-    // Put the BookId with the first free key
-    logInConsole("storeBook length of SessionStorage before storing = " + sessionStorage.length);
-    // search for free key
-    let key=1;
-    while ((sessionStorage.getItem(key)) && (key<=MAX_BOOK_IN_POCH_LIST)) {
-      key++;
-    }
-    sessionStorage.setItem(key,bookId);
-    sessionStorage.setItem(bookId,key);
-    logInConsole("storeBookId = " + bookId + " in key = " + key);
-    logInConsole("storeBook length of SessionStorage after storing = " + sessionStorage.length);
-
-    // increment and save the number of books selected
-    counterOfBooks++;
-    logInConsole("storeBook save counter of books after storing= " + counterOfBooks);
-    sessionStorage.setItem(COUNTER_OF_BOOKS,counterOfBooks);
+  if (!existBookInMyPochList(bookId)) {
+    let tabOfBooks = getMyPochList();
+    logInConsole("storeBook length of SessionStorage before storing = " + tabOfBooks.length);
+    tabOfBooks.unshift(bookId);
+    logInConsole("storeBook length of SessionStorage after storing = " + tabOfBooks.length);
+    saveMyPochList(tabOfBooks);
     return true;
   } else {
     alertBookAlreadyExist();
@@ -314,20 +321,24 @@ function storeBook(bookId){
 }
 
 function removeBook(bookId) {
-  if (sessionStorage.getItem(bookId)) {
-    logInConsole("removeBook key = " + sessionStorage.getItem(bookId));
-    sessionStorage.removeItem(sessionStorage.getItem(bookId));
-    logInConsole("removeBook bookId = " + bookId);
-    sessionStorage.removeItem(bookId);
-    let counterOfBooks = sessionStorage.getItem(COUNTER_OF_BOOKS);
-    counterOfBooks--;
-    sessionStorage.setItem(COUNTER_OF_BOOKS,counterOfBooks);
+  let tabOfBooks = getMyPochList();
+  let index = 0;
+  let find = false;
+  while ((index < tabOfBooks.length) && !(find)) {
+    if (tabOfBooks[index] == bookId) {
+      find = true;
+      tabOfBooks[index] = REMOVED;
+      logInConsole("removeBook bookId = " + bookId + " in position = " + index);
+    } else {
+      index++;
+    }
   }
+  saveMyPochList(tabOfBooks);
 }
 
 function onLoadPage() {
     h2NewBook.insertAdjacentElement("afterEnd",createAddBookButton());
-    loadMaPocheList();
+    loadMyPochList();
 }
 
 const GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes";
@@ -348,8 +359,8 @@ const AUTHOR_CLASS = "book__author";
 const ID_CLASS = "book__id";
 const DESCRIPTION_CLASS = "book__description";
 const IMAGE_CLASS ="book__image";
-const MAX_BOOK_IN_POCH_LIST=100;
-const COUNTER_OF_BOOKS = "COUNTER_OF_BOOKS";
+const MAPOCHLISTE = "MAPOCHLISTE";
+const REMOVED = "REMOVED";
 const BOOKMARK_SRC = "./public/img/bookmark-solid-green.svg";
 const TRASHCAN_SRC = "./public/img/trash-can-solid.svg";
 const BOOKMARK_CLASS = "fa-bookmark";
