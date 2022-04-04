@@ -243,7 +243,6 @@ function actionRouter(event) {
       removeElement(SEARCHBLOK_ID);
       removeElement(RESULTBLOK_ID);
       logInConsole("clic cancelButton");
-      // Add AddBookButton
       h2NewBook.insertAdjacentElement("afterEnd",createAddBookButton());
       break;
     default:
@@ -293,7 +292,7 @@ function saveMyPochList(tabOfBooks){
   logInConsole("SaveMyPochList = " + tabOfBooksToSave);
 }
 
-function existBookInMyPochList(bookId,){
+function existBookInMyPochList(bookId){
   let tabOfBooks = getMyPochList();
   let find = false;
   let index = 0;
