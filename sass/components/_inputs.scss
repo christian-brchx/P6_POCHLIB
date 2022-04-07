@@ -1,13 +1,14 @@
 input{
     @include mobile-only{
-    /* Le champ input déborde du bloc si 100% */
-    width : 98%;
+        /* Le champ input déborde du bloc si 100% */
+        width : 98%;
     }
     @include tablette-only{
-        width : 70%;
-        align-content:right;
+        /* Le champ input déborde du bloc si 100% */
+        width : 99%;
     }
     @include bureau-only{
+        /* champ input raccourci pour affichage libelle*/
         width : 80%;
     }
 }

@@ -5,7 +5,7 @@ function logInConsole(message) {
 }
 
 function createAddBookButton(){
-    let btn = createButton(ADDBUTTON_ID,"button--green","Ajouter un livre");
+    const btn = createButton(ADDBUTTON_ID,"button--green","Ajouter un livre");
     btn.classList.add("button--center");
     return btn;
 }
@@ -21,7 +21,7 @@ function createCancelButton(){
 function createBlokSearchWithButtonsAndFields() {
   logInConsole("create searchbuttons and fields");
   
-  let searchBlok = document.createElement("div");
+  const searchBlok = document.createElement("div");
   searchBlok.id = SEARCHBLOK_ID;
   h2NewBook.insertAdjacentElement("afterEnd",searchBlok);
   
@@ -36,13 +36,13 @@ function createBlokSearchWithButtonsAndFields() {
 }
 
 function createInputField(inputId){
-  let input = document.createElement("input");
+  const input = document.createElement("input");
   input.id = inputId;
   return input;
 }
 
 function createButton(buttonId, buttonClass, buttonText){
-  let button = document.createElement("button");
+  const button = document.createElement("button");
   button.classList.add("button");
   button.classList.add(buttonClass);
   button.id = buttonId;
@@ -53,8 +53,8 @@ function createButton(buttonId, buttonClass, buttonText){
 
 
 function searchForBooks(){
-  let title = document.getElementById(TITLEINPUT_ID);
-  let author = document.getElementById(AUTHORINPUT_ID);
+  const title = document.getElementById(TITLEINPUT_ID);
+  const author = document.getElementById(AUTHORINPUT_ID);
   if ((title.value == "") || (author.value == "")) {
     logInConsole("search for books : un des champs est vide");
     alertEmptySearchField();
@@ -66,10 +66,10 @@ function searchForBooks(){
   }
 }
 
-async function searchForBooksWithGoogleApi(intitle, inauthor) {
-  let request = GOOGLE_BOOKS_API + "?q=" + intitle + "+inauthor:" + inauthor;
+function searchForBooksWithGoogleApi(intitle, inauthor) {
+  const request = GOOGLE_BOOKS_API + "?q=" + intitle + "+inauthor:" + inauthor;
   logInConsole(request);
-  await fetch(request)
+  fetch(request)
   .then(function(res) {
     if (res.ok){
       return res.json();
@@ -84,7 +84,6 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
     } else {
       showNoFoundBook();
     }
-    return value;
   })
   .catch(function(err){
     logInConsole();("erreur appel google API");
@@ -92,7 +91,7 @@ async function searchForBooksWithGoogleApi(intitle, inauthor) {
 }
 
 function createResultBlok() {
-  let resultBlok = document.createElement("div");
+  const resultBlok = document.createElement("div");
   resultBlok.id = RESULTBLOK_ID;
   resultBlok.appendChild(document.createElement("h2")).innerText="Résultats de recherche";
   document.getElementById(SEARCHBLOK_ID).insertAdjacentElement("afterend",resultBlok);
@@ -100,18 +99,18 @@ function createResultBlok() {
 }
 
 function addFoundBookInBlok(book,blokId){
-  let elementBook = document.createElement("div");
+  const elementBook = document.createElement("div");
   elementBook.classList.add(BOOK_CLASS);
-  let elementBookTitle = document.createElement("div");
+  const elementBookTitle = document.createElement("div");
   elementBookTitle.classList.add(TITLE_CLASS);
   elementBookTitle.innerText = "Titre : " + book.volumeInfo.title;
-  let elementBookId = document.createElement("div");
+  const elementBookId = document.createElement("div");
   elementBookId.classList.add(ID_CLASS);
   elementBookId.innerText = "Id : " + book.id;
-  let elementBookAuthor = document.createElement("div");
+  const elementBookAuthor = document.createElement("div");
   elementBookAuthor.classList.add(AUTHOR_CLASS);
   elementBookAuthor.innerText = "Auteur : " + book.volumeInfo.authors[0];
-  let elementBookDescription = document.createElement("div");
+  const elementBookDescription = document.createElement("div");
   elementBookDescription.classList.add(DESCRIPTION_CLASS);
   if (book.volumeInfo.description != null) {
     logInConsole(book.volumeInfo.description.substring(0,200));
@@ -141,7 +140,7 @@ function addFoundBookInBlok(book,blokId){
 }
 
 function createImageBook(src) {
-  let img = document.createElement("img");
+  const img = document.createElement("img");
   img.classList.add(IMAGE_CLASS);
   img.src = src;
   img.alt = "book image";
@@ -149,7 +148,7 @@ function createImageBook(src) {
 }
 
 function createSolidBookMark(markClass,bookId){
-  let img = document.createElement("img");
+  const img = document.createElement("img");
   img.classList.add("book__fa-solid");
   img.classList.add(markClass);
   switch (markClass) {
@@ -185,12 +184,12 @@ function actionBook(event){
 }
 
 function extractId(id){
-  let retId = id.substring(2);
+  const retId = id.substring(2);
   return retId;
 }
 
 function showNoFoundBook() {
-  let p = document.createElement("p");
+  const p = document.createElement("p");
   p.innerText = "Aucun livre n’a été trouvé";
   document.getElementById(RESULTBLOK_ID).appendChild(p);
 }
@@ -204,10 +203,10 @@ function alertEmptySearchField() {
 }
 
 
-async function showInformationsFoundBook(bookId,blokId) {
-  let request = GOOGLE_BOOKS_API + "/" + bookId;
+function showInformationsFoundBook(bookId,blokId) {
+  const request = GOOGLE_BOOKS_API + "/" + bookId;
   logInConsole(request);
-  await fetch(request)
+  fetch(request)
   .then(function(res) {
     if (res.ok){
       return res.json();
@@ -216,10 +215,9 @@ async function showInformationsFoundBook(bookId,blokId) {
   .then(function (value){
     logInConsole(value);
     addFoundBookInBlok(value,blokId);
-    return value;
   })
   .catch(function(err){
-    console.error("erreur appel google API");
+    console.error("erreur appel google API" + err);
   });
 }
 
@@ -228,18 +226,18 @@ function actionRouter(event) {
   switch (this.id){
     case ADDBUTTON_ID:
       logInConsole("clic addButton");
-      // Clean the add Button
+      // erase the add Button
       removeElement(ADDBUTTON_ID);
       createBlokSearchWithButtonsAndFields();
       break;
     case SEARCHBUTTON_ID:
       logInConsole("clic searchButton");
-      // clean old results blok
+      // erase old results blok
       removeElement(RESULTBLOK_ID);
       searchForBooks();
         break;
     case CANCELBUTTON_ID:
-      // clean search and result blok
+      // erase search and result blok
       removeElement(SEARCHBLOK_ID);
       removeElement(RESULTBLOK_ID);
       logInConsole("clic cancelButton");
@@ -251,7 +249,7 @@ function actionRouter(event) {
 }
 
 function removeElement(elementId) {
-  let element = document.getElementById(elementId);
+  const element = document.getElementById(elementId);
   if (element != null) {
     if (element.id == RESULTBLOK_ID) {
       // remove the <hr> tag before the resultBlok
@@ -262,7 +260,7 @@ function removeElement(elementId) {
 }
 
 async function loadMyPochList() {
-  let tabOfBooks = getMyPochList();
+  const tabOfBooks = getMyPochList();
   logInConsole("load Ma PochList number of books = " + tabOfBooks.length);
   let numberOfBooksLoaded = 0;
   while (numberOfBooksLoaded < tabOfBooks.length) {
@@ -282,7 +280,7 @@ function getMyPochList(){
 }
 
 function saveMyPochList(tabOfBooks){
-  let tabOfBooksToSave = [];
+  const tabOfBooksToSave = [];
   for (let bookId of tabOfBooks) {
     if (bookId != REMOVED) {
       tabOfBooksToSave.push(bookId);
@@ -293,7 +291,7 @@ function saveMyPochList(tabOfBooks){
 }
 
 function existBookInMyPochList(bookId){
-  let tabOfBooks = getMyPochList();
+  const tabOfBooks = getMyPochList();
   let find = false;
   let index = 0;
   while ((index < tabOfBooks.length) && !(find)) {
@@ -307,7 +305,7 @@ function existBookInMyPochList(bookId){
 
 function storeBook(bookId){
   if (!existBookInMyPochList(bookId)) {
-    let tabOfBooks = getMyPochList();
+    const tabOfBooks = getMyPochList();
     logInConsole("storeBook length of SessionStorage before storing = " + tabOfBooks.length);
     tabOfBooks.unshift(bookId);
     logInConsole("storeBook length of SessionStorage after storing = " + tabOfBooks.length);
@@ -320,7 +318,7 @@ function storeBook(bookId){
 }
 
 function removeBook(bookId) {
-  let tabOfBooks = getMyPochList();
+  const tabOfBooks = getMyPochList();
   let index = 0;
   let find = false;
   while ((index < tabOfBooks.length) && !(find)) {
